@@ -9,6 +9,8 @@ struct HintSection: View {
     let onAddHint: (String) -> Void
     
     @State private var currentHint = ""
+    @State private var showToast = false
+    @State private var toastMessage = ""
     
     var body: some View {
         VStack(spacing: 16) {
@@ -20,6 +22,14 @@ struct HintSection: View {
                     currentHint = hint
                     onAddHint(hint)
                     showingHint = true
+                } else {
+                    let hint = generateHint(for: todayWord ?? "", at: hintCount)
+                        toastMessage = hint
+                        showToast = true
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            showToast = false
+                        }
                 }
             }) {
                 Text("🔎 힌트")
@@ -63,6 +73,21 @@ struct HintSection: View {
         } message: {
             Text(currentHint)
         }
+        .overlay(
+            VStack {
+                if showToast {
+                    Text(toastMessage)
+                        .padding()
+                        .background(Color.black.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 0.3), value: showToast)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .padding(.bottom, 50)
+        )
     }
     
     private func generateHint(for word: String, at index: Int) -> String {

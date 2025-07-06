@@ -7,7 +7,8 @@ class NetworkService {
     
     private let baseURL = "https://opendict.korean.go.kr/api/search"
     private var apiKey: String {
-        return ConfigManager.apiKey
+        // TODO: 실제 API 키로 교체하세요
+        return "YOUR_ACTUAL_API_KEY_HERE"
     }
     
     func fetchRandomWord() -> AnyPublisher<WordItem, Error> {
@@ -28,6 +29,7 @@ class NetworkService {
     }
     
     private func fetchRandomWordAsync() async throws -> WordItem? {
+        
         while true {
             let randomChar = getRandomKoreanChar()
             print("Random Korean char: \(randomChar)")
@@ -70,6 +72,17 @@ class NetworkService {
                 print("No valid words found for \(randomChar)")
             }
         }
+    }
+    
+    private func getDefaultWord() -> WordItem {
+        let defaultWords = [
+            WordItem(word: "사과", definition: "배와 함께 대표적인 과일의 하나."),
+            WordItem(word: "컴퓨터", definition: "전자 회로를 이용하여 자동으로 계산이나 정보를 처리하는 기계."),
+            WordItem(word: "책상", definition: "책을 읽거나 글을 쓸 때에 쓰는 상."),
+            WordItem(word: "하늘", definition: "지구를 둘러싼 무한대의 공간."),
+            WordItem(word: "바다", definition: "지구 표면에서 육지를 제외한 짠물이 차 있는 부분.")
+        ]
+        return defaultWords.randomElement()!
     }
     
     private func parseDefinition(from description: String) -> String {

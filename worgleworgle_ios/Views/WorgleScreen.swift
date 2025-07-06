@@ -25,9 +25,11 @@ struct WorgleScreen: View {
                     if viewModel.isLoading {
                         Text("단어를 불러오는 중입니다...")
                             .font(.system(size: 16))
+                            .foregroundColor(Color(UIColor.darkGray))
                     } else {
                         Text("오늘의 단어 글자 수 : \(viewModel.todayWord?.count ?? 0)")
                             .font(.system(size: 16))
+                            .foregroundColor(Color(UIColor.darkGray))
                     }
                     
                     // Word definition

@@ -7,18 +7,28 @@ struct InputSection: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            TextField("단어를 입력하세요!", text: $userInput)
-                .textFieldStyle(.plain)
-                .padding()
-                .background(Color.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color(red: 0.2, green: 0.6, blue: 0.3), lineWidth: 2)
-                )
-                .focused($isInputFocused)
-                .onSubmit {
-                    onSubmit()
+            ZStack(alignment: .leading) {
+                if userInput.isEmpty {
+                    Text("단어를 입력하세요!")
+                        .foregroundColor(Color(UIColor.lightGray))  // placeholder 색상
+                        .padding(.horizontal)
                 }
+                
+                TextField("", text: $userInput)
+                    .textFieldStyle(.plain)
+                    .foregroundColor(.black)  // 입력 텍스트 색상
+                    .accentColor(Color(red: 0.2, green: 0.6, blue: 0.3))  // 커서 색상
+                    .padding()
+            }
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(red: 0.2, green: 0.6, blue: 0.3), lineWidth: 2)
+            )
+            .focused($isInputFocused)
+            .onSubmit {
+                onSubmit()
+            }
             
             Button(action: onSubmit) {
                 Text("입력")

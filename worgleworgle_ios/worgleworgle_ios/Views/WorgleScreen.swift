@@ -8,6 +8,10 @@ struct WorgleScreen: View {
     @State private var showingConfetti = false
     @FocusState private var isInputFocused: Bool
     
+    @State private var showToast = false
+    @State private var toastMessage = ""
+    
+    // MARK: - Body
     var body: some View {
         ZStack {
             Color(red: 1.0, green: 0.98, blue: 0.8) // Lemon color
@@ -25,9 +29,11 @@ struct WorgleScreen: View {
                     if viewModel.isLoading {
                         Text("단어를 불러오는 중입니다...")
                             .font(.system(size: 16))
+                            .foregroundColor(Color.gray)
                     } else {
                         Text("오늘의 단어 글자 수 : \(viewModel.todayWord?.count ?? 0)")
                             .font(.system(size: 16))
+                            .foregroundColor(Color.gray)
                     }
                     
                     // Word definition
@@ -47,12 +53,15 @@ struct WorgleScreen: View {
                     // Stats
                     HStack(spacing: 20) {
                         Text("입력 횟수: \(viewModel.inputCount)")
+                            .foregroundColor(Color.gray)
                         Text("힌트 사용 횟수: \(viewModel.hintCount)")
+                            .foregroundColor(Color.gray)
                     }
                     .font(.system(size: 14))
                     
                     Text("오늘 맞힌 단어 수: \(viewModel.correctWordCount)")
                         .font(.system(size: 14))
+                        .foregroundColor(Color.gray)
                     
                     // Similarity result
                     if let similarity = similarity {
@@ -103,12 +112,30 @@ struct WorgleScreen: View {
                 ConfettiView()
                     .allowsHitTesting(false)
             }
+            
+            // Toast overlay
+            VStack {
+                if showToast {
+                    Text(toastMessage)
+                        .padding()
+                        .background(Color.black.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 0.3), value: showToast)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .padding(.bottom, 50)
         }
         .onAppear {
             checkForNewDay()
         }
     }
     
+    // MARK: - Utils
+    
+    // MARK: submit
     private func handleSubmit() {
         guard let todayWord = viewModel.todayWord else { return }
         
@@ -131,6 +158,7 @@ struct WorgleScreen: View {
         }
     }
     
+    // MARK: CheckForNewDay
     private func checkForNewDay() {
         Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             if viewModel.isNewDay() {
@@ -139,9 +167,13 @@ struct WorgleScreen: View {
         }
     }
     
+    // MARK: Toast
     private func showToast(_ message: String) {
-        // iOS에서는 Toast 대신 다른 방식으로 알림 표시
-        // 실제 구현시 Alert 또는 커스텀 Toast 뷰 사용
-        print(message)
+        toastMessage = message
+        showToast = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            showToast = false
+        }
     }
 }

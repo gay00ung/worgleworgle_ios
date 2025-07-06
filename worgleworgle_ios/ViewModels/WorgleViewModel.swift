@@ -82,6 +82,12 @@ class WorgleViewModel: ObservableObject {
             wordDefinition = randomWord.definition
             storageService.todayWord = randomWord
             storageService.updateLastWordDate()
+            
+            if storageService.isNewDay() {
+                resetDailyStats()
+            } else {
+                resetRoundStats()
+            }
         }
     }
     
