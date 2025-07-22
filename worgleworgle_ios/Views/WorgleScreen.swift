@@ -13,8 +13,10 @@ struct WorgleScreen: View {
             Color(red: 1.0, green: 0.98, blue: 0.8) // Lemon color
                 .ignoresSafeArea()
             
-            ScrollView {
-                VStack(spacing: 20) {
+            VStack {
+                // 스크롤 가능한 메인 콘텐츠
+                ScrollView {
+                    VStack(spacing: 20) {
                     // Title
                     Text("🤪 워글워글 🤪")
                         .font(.system(size: 36, weight: .bold))
@@ -86,20 +88,27 @@ struct WorgleScreen: View {
                     )
                     .padding(.horizontal)
                     
-                    Spacer(minLength: 50)
-                    
-                    // Give up button
-                    Button(action: {
-                        if let word = viewModel.todayWord {
-                            showToast("정답은: \(word) 입니다!")
-                        }
-                    }) {
-                        Text("정답을 알려주세요😭")
-                            .font(.system(size: 14))
-                            .foregroundColor(.gray)
+                    Spacer(minLength: 20)
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 20) // 하단 여백
                 }
+                
+                // 하단 고정 버튼
+                Button(action: {
+                    if let word = viewModel.todayWord {
+                        showToast("정답은: \(word) 입니다!")
+                    }
+                }) {
+                    Text("정답을 알려주세요😭")
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 20)
+                        .background(Color.white.opacity(0.8))
+                        .cornerRadius(20)
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                }
+                .padding(.bottom, 30)
             }
             
             // Confetti effect

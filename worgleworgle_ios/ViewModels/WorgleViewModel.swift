@@ -59,11 +59,8 @@ class WorgleViewModel: ObservableObject {
                     self?.storageService.todayWord = wordItem
                     self?.storageService.updateLastWordDate()
                     
-                    if fullReset {
-                        self?.resetDailyStats()
-                    } else if forceRefresh {
-                        self?.resetRoundStats()
-                    }
+                    // 항상 새 단어를 가져오므로 항상 라운드 통계 리셋
+                    self?.resetRoundStats()
                 }
             )
             .store(in: &cancellables)
